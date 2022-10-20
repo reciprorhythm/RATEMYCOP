@@ -1,0 +1,19 @@
+<html>
+    <style>
+        html {text-align: center; color: whitesmoke ;background-color: black;}
+    </style>
+    <body>
+        <a href=" {{ url_for('index') }} ">HOME</a>
+        <a href=" {{ url_for('coplist') }} ">COPLIST</a>
+        <a href=" {{ url_for('reports') }} ">REPORTS</a>
+        <a href=" {{ url_for('submit') }} ">SUBMIT</a>     
+        {% block content %}{% endblock %}
+    <div>
+        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+    </div>
+        {% block scripts %}{% endblock %}
+    </body>
+    <h1>RATEMYCOP.CA</h1>
+</html>

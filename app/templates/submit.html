@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    h1 {color: whitesmoke;font-size: large;}
+    form {color: whitesmoke;}
+</style>
+<h1>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+</h1>
+<form action="" method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    {{ form.postTime(type="hidden")}}
+    <p>
+        {{ form.eviUp.label }}<br> 
+        {{ form.eviUp(size=32, type="file") }}
+    </p>
+    <p>
+        {{ form.title.label }}<br>
+        {{ form.title(size=32) }}
+    </p>
+    <p>
+        {{ form.location.label }}<br>
+        {{ form.location(size=32) }}
+    </p>
+    <p>
+        {{ form.datetime.label }}<br>
+        {{ form.datetime(size=32, type="datetime-local") }}
+    </p>
+    <p>
+        {{ form.descrip.label }}<br>
+        {{ form.descrip(size=32, style='height: 250px; width: 500') }}
+    </p>
+    <p>
+        {{ form.depTag.label}}<br>
+        {{ form.depTag()}}
+    </p>
+    <p>
+        {{ form.copTag.label}}<br>
+        {{ form.copTag()}}
+    </p>
+    <p>
+        {{ form.cw.label }}<br>
+        {{ form.cw(size=32) }}
+    </p>
+    <p>
+        {{ form.escDesc() }}
+    </p>
+    <p>
+        {{ form.submit() }}
+    </p>
+</form>
+{% endblock %}
