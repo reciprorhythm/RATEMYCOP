@@ -131,7 +131,7 @@ def submit():
 
 if __name__ == "__main__":
     app.debug = True
-    app.run(host="192.168.2.17")
+    app.run(host="localhost", port=5000)
 
 
 
