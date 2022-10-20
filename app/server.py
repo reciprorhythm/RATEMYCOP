@@ -96,7 +96,7 @@ def repo():
 
 @app.route('/coplist')
 def coplist():
-    return render_template('coplist.html', title='PIGS')
+    return render_template('coplist.html')
 
 @app.route('/reports')
 def reports():
