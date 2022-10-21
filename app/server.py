@@ -118,7 +118,7 @@ def submit():
         db.session.commit()
         flash('success')
         return redirect('reports')
-        # update database fields, validators and ensure code is nice
+        
     else:
         for field, errors in form.errors.items():
             for error in errors:
