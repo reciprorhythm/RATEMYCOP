@@ -1,4 +1,4 @@
-# RATEMYCOP
+# RATEMYCOP.CA
 
 Hi and Welcome!! Using this to as a to-do list for now
 
