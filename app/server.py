@@ -98,6 +98,12 @@ def repo():
 def coplist():
     return render_template('coplist.html')
 
+@app.route('/cop/<copID>')
+def cop(copID):
+    cop = Cops.query.filter_by(copID=copID).first_or_404()
+
+    return render_template('cop.html', cop=cop)
+
 @app.route('/reports')
 def reports():
     return render_template('reports.html')
