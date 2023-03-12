@@ -107,8 +107,6 @@ def cop(copID):
 @app.route('/reports')
 def reports():
     return render_template('reports.html')
-    #make reports page links to posts, format them like blogg posts not datatable?
-    #return to Micheal!!
 
 @app.route('/submit', methods=['GET', 'POST'])
 def submit():
