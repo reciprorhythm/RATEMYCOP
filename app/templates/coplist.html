@@ -11,7 +11,10 @@
             {data: 'rank'},
             {data: 'dept'},
             {data: 'sal'},
-            {data: 'copID'} 
+            {data: 'copID', 
+             "render": function ( data, type, row, meta ) {
+              return '<a href="cop/'+data+'">'+data+'</a>';} 
+      } 
          ]
       });
     });
