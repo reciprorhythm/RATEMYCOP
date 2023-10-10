@@ -11,8 +11,10 @@
             {data: 'rank'},
             {data: 'dept'},
             {data: 'sal'},
-            {data: 'copID'} 
-         ]
+            {data: 'copID',
+            "render": function ( data, type, row, meta ) {
+              return '<a href="cop/'+data+'">'+data+'</a>';} 
+      }]
       });
     });
   </script>
@@ -29,7 +31,7 @@
 
 <body>
   <div>
-    <p1>COPLIST</p1>
+    <p1></p1>
   </div>
 </body>
 
