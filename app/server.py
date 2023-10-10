@@ -91,6 +91,7 @@ def cop(copID):
         db.session.add(record)
         db.session.commit()
         flash('success')
+        return redirect(url_for('cop', copID=copID))
     else:
         for field, errors in form.errors.items():
             for error in errors:
