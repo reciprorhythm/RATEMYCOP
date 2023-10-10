@@ -1,6 +1,66 @@
-
-
+{% extends "base.html" %}
 {% block content %}
-    <h1>{{ cop.rank, cop.firstN, cop.lastN }}</h1>
-    <h2>{{ cop.dept, cop.sal }}</h2>
+<link type="text/css" href="https://getbootstrap.com/1.0.0/assets/css/bootstrap-1.0.0.min.css">
+<div class="container" style="position: relative;">
+<table>
+<h0 style="text-align: left;">
+    <h2> {{ cop.firstN }} {{ cop.lastN }}</h2>
+    <h4>$ {{ cop.sal }}</h4>
+    <h3>{{ cop.rank }}, {{ cop.dept }} </h3>
+</h0>
+</table>
+<style>
+    table, h2, h3, h4 {border: 1px solid whitesmoke; border-radius: 5px; border-collapse: collapse;}
+    h3 {height: 100;}
+    table {border-spacing: 0.1px}
+    h5, h6 {color: whitesmoke; font-size: large;}
+    form {color: whitesmoke; text-align: justify;}
+</style>
+<f1>
+<form action="" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        {{ form.repoTime(type="hidden")}}
+        {{ form.repoCop(type="hidden")}}
+        <p>
+            {{ form.repoTitle.label }}<br>
+            {{ form.repoTitle(size=32) }}
+        </p>
+        <p>
+            {{ form.repoLoca.label }}<br>
+            {{ form.repoLoca(size=32) }}
+        </p>
+        <p>
+            {{ form.repoCont.label }}<br>
+            {{ form.repoCont(size=32, style='height: 250px; width: 500') }}
+        </p>
+        <p>
+            {{ form.submit() }}
+        </p>
+</form> 
+</f1>
+<h5>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+</h5>
+{% for repo in repo %}
+<table>
+<tr>
+    <td>{{ repo.repoTitle }}</td>
+    <td>{{ repo.repoLoca }}</td>
+    <td>{{ repo.repoCont }}</td>
+    <td>{{ repo.repoCop }}</td>
+</tr>
+</table>
+{% endfor %}
+
+</div>
 {% endblock %}
+
+
