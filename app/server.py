@@ -35,48 +35,26 @@ class Cops(db.Model):
         }
 
 class Reports(db.Model):
-    _tablename_= 'reports'
-    postID = db.Column (db.Integer, primary_key=True)
-    postTime = db.Column (db.Text)
-    title = db.Column (db.String(150), nullable=False) 
-    datetime = db.Column (db.Text(150), nullable=False)
-    location = db.Column (db.String(150), nullable=False)
-    eviUp = db.Column (db.String(200), nullable=False) 
-    descrip = db.Column (db.String(1500), nullable=False)
-    cw = db.Column (db.String(150), nullable=True)
-    escDesc = db.Column (db.String(100), nullable=True)
-    copTag = db.Column (db.String(100))
-    depTag = db.Column (db.String(100)) 
-
-    def __init__(self, postID, postTime, title, datetime, location, eviUp, descrip, cw, escDesc, copTag, depTag):
-        self.postId = postID
-        self.postTime = postTime
-        self.title = title
-        self.datetime = datetime
-        self.location = location
-        self.eviUp = eviUp
-        self.descrip = descrip
-        self.cw = cw
-        self.escDesc = escDesc
-        self.copTag = copTag
-        self.depTag = depTag
+    _tablename_ = 'reports'
+    repoID = db.Column(db.Integer, primary_key=True)
+    repoTitle = db.Column(db.String(150), nullable=False)
+    repoLoca = db.Column(db.String(150), nullable=True)
+    repoCont = db.Column(db.String(500), nullable=False)
+    repoTime = db.Column(db.Text(150), nullable=False)
+    repoCop = db.Column(db.String(150), nullable=True)
 
     def to_dict(self):
         return {
-            'postID': self.postID,
-            'postTime': self.postTime,
-            'title': self.title,
-            'datetime': self.datetime,
-            'location': self.location,
-            'eviUp': self.eviUp,
-            'descrip': self.descrip,
-            'cw': self.cw,
-            'escDesc': self.escDesc,
-            'copTag': self.copTag,
-            'depTag': self.depTag,
+            'repoID': self.repoID,
+            'repoTitle': self.repoTitle,
+            'repoLoca': self.repoLoca,
+            'repoCont': self.repoCont,
+            'repoTime': self.repoTime,
+            'repoCop': self.repoCop,
         }
 
-######ROUTES ROUTES ROUTES#######
+    
+####ROUTES ROUTES ROUTES#######
 
 @app.shell_context_processor
 def make_shell_context():
@@ -90,47 +68,37 @@ def index():
 def data():
     return {'data': [cops.to_dict() for cops in Cops.query]}
 
-@app.route('/api/repo') 
-def repo():
-    return {'repo': [reports.to_dict() for reports in Reports.query]}
+@app.route('/api/reporoute')
+def reporoute():
+    return {'data': [reports.to_dict() for reports in Reports.query]}
 
 @app.route('/coplist')
 def coplist():
     return render_template('coplist.html')
 
-@app.route('/cop/<copID>')
-def cop(copID):
-    cop = Cops.query.filter_by(copID=copID).first_or_404()
-
-    return render_template('cop.html', cop=cop)
-
 @app.route('/reports')
-def reports():
+def repolist():
     return render_template('reports.html')
 
-@app.route('/submit', methods=['GET', 'POST'])
-def submit():
+@app.route('/cop/<copID>', methods=['GET', 'POST'])
+def cop(copID):
+    cop = Cops.query.filter_by(copID=copID).first_or_404()
+    repo = Reports.query.filter_by(repoCop=copID).all()
     form = ReportForm()
     if form.validate_on_submit():
-        file = request.files['eviUp']
-        filename = secure_filename(file.filename) 
-        file.save(os.path.join(app.config['UPLOADS_FOLDER'], filename))
-
-        reportdata = Reports(request.form['postID'], request.form['postTime'], request.form['title'], request.form['datetime'], request.form['location'], filename, request.form['descrip'], request.form['cw'], request.form['escDesc'], request.form['copTag'], request.form['depTag'])
-        record = reportdata
+        repodata = Reports(repoTitle=form.repoTitle.data, repoLoca=form.repoLoca.data, repoCont=form.repoCont.data, repoTime=form.repoTime.data, repoCop=copID)
+        record = repodata
         db.session.add(record)
         db.session.commit()
         flash('success')
-        return redirect('reports')
-        
     else:
         for field, errors in form.errors.items():
             for error in errors:
                 flash("Error in {}: {}".format(
-                    getattr(form, field).label.text,
+                getattr(form, field).label.text,
                     error
                 ), 'error')
-        return render_template('submit.html', title='Submit Report', form=form)
+    return render_template('cop.html', cop=cop, form=form, repo=repo)
 
 
 if __name__ == "__main__":
