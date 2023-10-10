@@ -4,73 +4,45 @@
   <script>
     $(document).ready(function () {
       $('#repotable').DataTable({
-        ajax: {
-          url: '/api/repo',
-          dataSrc: 'repo'
-          },
-        columns: [ 
-            {data: 'postID'},
-            {data: 'postTime'},
-            {data: 'title'},
-            {data: 'datetime'},
-            {data: 'location'},
-            {data: 'eviUp'},
-            {data: 'descrip'},
-            {data: 'cw'},
-            {data: 'copTag'},
-            {data: 'depTag'},
-            {data: 'escDesc'}
-          ]
-        });
+        ajax: '/api/reporoute',
+        columns: [
+            {data: 'repoTitle'},
+            {data: 'repoLoca'},
+            {data: 'repoCont'},
+            {data: 'repoCop',
+            "render": function ( data, type, row, meta ) {
+              return '<a href="cop/'+data+'">'+data+'</a>';} 
+      }]
       });
+    });
   </script>
 {% endblock %}
 
 {% block content %}
 <head>
-    <title>reportlist</title>
+    <title>Reports</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
     <style>
       p1 {text-align: center; color: whitesmoke; font-size: 40px; background-color: black;}
-      li {font-size: 20px}
     </style>
 </head>
 
 <body>
   <div>
-    <p1>REPORTS</p1>
+    <p1></p1>
   </div>
 </body>
 
  <table id="repotable" class="display compact" data-page-length="50">
   <thead>
     <tr>
-        <th>ID</th>
-        <th>Upload</th>
         <th>Title</th>
-        <th>Time</th>
         <th>Location</th>
-        <th>Evidence</th>
-        <th>Description</th>
-        <th>Content Warnings</th>
-        <th>Implicated Officers</th>
-        <th>Implicated Departments</th>
-        <th>Esc/Desc</th>
+        <th>Content</th>
+        <th>repoCop</th>
     </tr>
   </thead>
   <tbody>
   </tbody>
  </table>
- 
- <h1>
-  {% with messages = get_flashed_messages() %}
-  {% if messages %}
-  <ul>
-      {% for message in messages %}
-      <li>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-  {% endwith %}
-</h1>
 {% endblock %}
