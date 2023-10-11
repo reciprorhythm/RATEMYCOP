@@ -49,11 +49,16 @@
 </h5>
 {% for repo in repo %}
 <table>
-<tr>
+<tr style="border: 1px solid whitesmoke; border-radius: 5px; border-collapse: collapse">
 <td>{{ repo.repoTitle }}</td>
-<td>{{ repo.repoLoca }}</td>
+</tr>
+<tr style="font-size: 12px">
+    <td>location: {{ repo.repoLoca }}</td><td>post ID:  <a href="/repo/ {{repo.repoID }} "> {{ repo.repoID }} </a></td>
+   +data+'</a>
+</tr>
+<tr> 
 <td>{{ repo.repoCont }}</td>
-<td>{{ repo.repoCop }}</td>
+
 </tr>
 </table>
 {% endfor %}
