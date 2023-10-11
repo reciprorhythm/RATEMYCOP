@@ -6,6 +6,9 @@
       $('#repotable').DataTable({
         ajax: '/api/reporoute',
         columns: [
+            {data: 'repoID',
+            "render": function ( data, type, row, meta ) {
+              return '<a href="repo/'+data+'">'+data+'</a>';}},
             {data: 'repoTitle'},
             {data: 'repoLoca'},
             {data: 'repoCont'},
@@ -36,6 +39,7 @@
  <table id="repotable" class="display compact" data-page-length="50">
   <thead>
     <tr>
+        <th>ID</th>
         <th>Title</th>
         <th>Location</th>
         <th>Content</th>
