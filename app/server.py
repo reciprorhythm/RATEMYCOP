@@ -86,7 +86,7 @@ def cop(copID):
     repo = Reports.query.filter_by(repoCop=copID).all()
     form = ReportForm()
     if form.validate_on_submit():
-        repodata = Reports(repoID=form.repoID.data, repoTitle=form.repoTitle.data, repoLoca=form.repoLoca.data, repoCont=form.repoCont.data, repoTime=form.repoTime.data, repoCop=copID)
+        repodata = Reports(repoTitle=form.repoTitle.data, repoLoca=form.repoLoca.data, repoCont=form.repoCont.data, repoTime=form.repoTime.data, repoCop=copID)
         record = repodata
         db.session.add(record)
         db.session.commit()
