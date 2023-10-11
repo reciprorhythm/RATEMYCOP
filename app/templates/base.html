@@ -1,19 +1,25 @@
 <html>
     <style>
-        html {text-align: center; color: whitesmoke ;background-color: black;}
+        html {text-align: center; color: whitesmoke ;background-color: black;}  
     </style>
+     <a href=" {{ url_for('index') }} "><h1 style="color: whitesmoke;">RATEMYCOP.CA</h1>
     <body>
-        <a href=" {{ url_for('index') }} ">HOME</a>
         <a href=" {{ url_for('coplist') }} ">COPLIST</a>
-        <a href=" {{ url_for('reports') }} ">REPORTS</a>
-        <a href=" {{ url_for('submit') }} ">SUBMIT</a>     
         {% block content %}{% endblock %}
     <div>
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+        <script type="text/css" href="https://getbootstrap.com/1.0.0/assets/css/bootstrap-1.0.0.min.css"></script>
     </div>
         {% block scripts %}{% endblock %}
     </body>
-    <h1>RATEMYCOP.CA</h1>
+    <p>//////////</p>
+    <div>SITE UNDER CONSTRUCTION</div>
+    <div><p2>app coming soon</p2></div>
+    <div><p2>for now, feel free to browse the data</p2></div>
+   <div><p2>check the <a href="https://github.com/reciprorhythm/RATEMYCOP-CONGRESS-ALPHA">code</a></p2></div>
+    <div>
+    <p2>or contact <a href="mailto:admin@ratemycop.ca">admin@ratemycop.ca</a> if you want to connect</p2>    
+    </div>
 </html>
