@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <link type="text/css" href="https://getbootstrap.com/1.0.0/assets/css/bootstrap-1.0.0.min.css">
-<div class="container" style="position: relative;">
+<div style="position: relative;">
 <table>
 <h0 style="text-align: left;">
     <h2> {{ cop.firstN }} {{ cop.lastN }}</h2>
@@ -10,13 +10,12 @@
 </h0>
 </table>
 <style>
-    table, h2, h3, h4 {border: 1px solid whitesmoke; border-radius: 5px; border-collapse: collapse;}
+    table, h2, h3, h4 {border: 1px solid whitesmoke; border-radius: 5px; border-collapse: collapse; width: 500; margin-left: auto; margin-right: auto}
     h3 {height: 100;}
     table {border-spacing: 0.1px}
     h5, h6 {color: whitesmoke; font-size: large;}
-    form {color: whitesmoke; text-align: justify;}
+    form {color: whitesmoke; text-align: center;}
 </style>
-<f1>
 <form action="" method="post" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         {{ form.repoTime(type="hidden")}}
@@ -37,7 +36,6 @@
             {{ form.submit() }}
         </p>
 </form> 
-</f1>
 <h5>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -52,14 +50,13 @@
 {% for repo in repo %}
 <table>
 <tr>
-    <td>{{ repo.repoTitle }}</td>
-    <td>{{ repo.repoLoca }}</td>
-    <td>{{ repo.repoCont }}</td>
-    <td>{{ repo.repoCop }}</td>
+<td>{{ repo.repoTitle }}</td>
+<td>{{ repo.repoLoca }}</td>
+<td>{{ repo.repoCont }}</td>
+<td>{{ repo.repoCop }}</td>
 </tr>
 </table>
 {% endfor %}
-
 </div>
 {% endblock %}
 
