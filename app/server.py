@@ -86,7 +86,7 @@ def cop(copID):
     repo = Reports.query.filter_by(repoCop=copID).all()
     form = ReportForm()
     if form.validate_on_submit():
-        repodata = Reports(repoTitle=form.repoTitle.data, repoLoca=form.repoLoca.data, repoCont=form.repoCont.data, repoTime=form.repoTime.data, repoCop=copID)
+        repodata = Reports(repoID=form.repoID.data, repoTitle=form.repoTitle.data, repoLoca=form.repoLoca.data, repoCont=form.repoCont.data, repoTime=form.repoTime.data, repoCop=copID)
         record = repodata
         db.session.add(record)
         db.session.commit()
@@ -101,6 +101,10 @@ def cop(copID):
                 ), 'error')
     return render_template('cop.html', cop=cop, form=form, repo=repo)
 
+@app.route('/repo/<repoID>', methods=['GET', 'POST'])
+def repo(repoID):
+    repo = Reports.query.filter_by(repoID=repoID).first_or_404()
+    return render_template('repo.html', repo=repo)
 
 if __name__ == "__main__":
     app.debug = True
