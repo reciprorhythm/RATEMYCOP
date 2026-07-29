@@ -13,7 +13,6 @@ type Variables = {
 }
 
 const app = new Hono<{ Bindings: Env, Variables: Variables }>()
-const magnetUri = 'magnet:?xt=urn:btih:f80148201466b22ebada529276ef142770762a7e&dn=demo.json&tr=wss%3A%2F%2Ftracker.openwebtorrent.com&ws=http%3A%2F%2Flocalhost%3A8787%2Fwebseed%2Fdemo.json'
 app.use('/*')
 
 app.get('/api/cops', async (c) => { ///should probably sort out the as rate_id thing and if theres any reason for it lol
@@ -60,10 +59,6 @@ app.get('/api/cops', async (c) => { ///should probably sort out the as rate_id t
   }
 })
 
-app.get('/api/magnet', (c) => {
-  return c.json({ magnetURI: magnetUri });
-});
-
 app.get('/static/uploads/:uploadId/:filename', async (c) => {
   const uploadId = c.req.param('uploadId')
   const filename = c.req.param('filename')
@@ -93,7 +88,7 @@ app.get('/static/uploads/:uploadId/:filename', async (c) => {
     return c.text('Error serving file', 500)
   }
 })
-
+// admin route secured using Cloudflare ZeroTrust, if running without Cloudflare use alternative means of securing route
 app.get('/admin', async (c) => {
   // This route should be protected by Cloudflare Zero Trust
   try {
@@ -138,7 +133,7 @@ app.post('/admin/approve/:id', async (c) => {
     return c.json({ error: 'Failed to approve post' }, 500)
   }
 })
-/// secure admin routes
+
 app.post('/admin/delete/:id', async (c) => {
   const id = c.req.param('id')
   try {
@@ -156,7 +151,6 @@ app.post('/admin/delete/:id', async (c) => {
       }
     }
     
-    // Delete ratecop entries first
     await c.env.DB.prepare(`
       DELETE FROM ratecop WHERE rate_id = ?
     `).bind(id).run()
@@ -201,7 +195,7 @@ app.post('/api/flag/:id', async (c) => {
     return c.json({ error: 'Failed to flag post' }, 500)
   }
 })
-// secure unflag route, use zerotrust
+
 app.post('/admin/unflag/:id', async (c) => {
   const id = c.req.param('id')
   try {
