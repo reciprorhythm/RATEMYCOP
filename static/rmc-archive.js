@@ -604,7 +604,6 @@ function view_cop(copId) {
         uploadPreview.id = 'uploadPreview';
         rateFormContent.appendChild(uploadPreview);
 
-      //  initializeFaceCensoring();
         // share to room button
         if (typeof client !== 'undefined' && client) {
             const form = document.getElementById('rateForm');
@@ -822,7 +821,6 @@ function updateResultsDisplay(results) {
     resultsContainer.replaceChildren();
     resultsContainer.appendChild(fragment);
     
-    // Add "Show More" button if there are more results
     if (results.length > currentDisplayCount) {
         const showMoreButton = document.createElement('button');
         showMoreButton.className = 'show-more-button';
