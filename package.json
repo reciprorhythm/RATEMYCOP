@@ -1,0 +1,10 @@
+{
+  "type":"module",
+  "devDependencies": {
+    "wrangler": "^4.59.3"
+  },
+  "dependencies": {
+    "hono": "^4.11.5",
+    "webtorrent": "^2.8.5"
+  }
+}

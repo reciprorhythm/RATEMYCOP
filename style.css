@@ -1,0 +1,256 @@
+/* Base styles */
+:root {
+    /* Use rem units instead of vw for better mobile compatibility */
+    --base-font-size: 1rem;  /* 16px base */
+    --base-spacing: 1rem;
+    --base-border: 2px;
+    
+    /* Common theme colors */
+    --primary-bg: #333333;
+    --primary-hover: #444444;
+    --primary-text: #eeee;
+    --border-color: #555555;
+    --border-radius: 4px;
+    --common-padding: 8px 16px;
+}
+
+body {
+    background-color: #000000;
+    color: var(--primary-text);
+    font-size: var(--base-font-size);
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2rem;  /* Fixed size instead of vw */
+    margin: 2rem 0;
+    cursor: pointer;
+}
+
+h2 {
+    min-width: 90%;
+    max-width: 14em;
+    min-height: 15%;
+    margin: 1.5rem auto 0 auto;
+}
+
+.h2head {
+    font-size: 0.8rem;
+    margin: 0.5rem 0;
+}
+
+.h2bod {
+    font-size: 0.9rem;
+    margin-left: 2%;
+    margin-top: 0.2rem;
+    border-left: var(--base-border) solid var(--border-color);
+    border-bottom: var(--base-border) solid var(--border-color);
+    padding: 0.5rem;
+}
+
+.cop {
+    border-left: var(--base-border) solid var(--border-color);
+    border-bottom: var(--base-border) solid var(--border-color);
+    padding: 0.5rem;
+}
+
+.tally {
+    font-size: 0.9rem;
+    margin-left: 2%;
+    margin-top: 0.2rem;
+}
+
+.rc {
+    border: var(--base-border) solid black;
+    border-radius: 5px;
+    min-width: 50%;
+    max-width: 100%;
+    height: auto;
+    margin: 2rem auto;
+    padding: 1.5rem;
+}
+
+.rchd {
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+p {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+}
+
+/* Common button styles */
+.btn,
+.search-button,
+.back-button,
+.rate-em button,
+.expando-btn,
+.show-more-button {
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+    border: 1px solid var(--border-color);
+    padding: var(--common-padding);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}
+
+.btn:hover,
+.search-button:hover,
+.back-button:hover,
+.rate-em button:hover,
+.expando-btn:hover,
+.show-more-button:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Form styles */
+.form-input {
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+    border: 1px solid var(--border-color);
+    padding: calc(var(--base-spacing) * 0.5);
+    border-radius: var(--border-radius);
+    width: auto;
+    box-sizing: border-box;
+    font-size: var(--base-font-size);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #777777;
+}
+
+.big {
+    height: calc(var(--base-spacing) * 25);
+}
+
+.lng {
+    width: 100%;
+}
+
+/* Search specific styles */
+.search-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.search-controls {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.sort-controls {  
+    display: flex;
+}
+
+.search-input {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+}
+
+.search-results {
+    display: grid;
+    gap: 15px;
+}
+
+.result-item {
+    padding: 15px;
+    background-color: #000000;
+}
+
+.result-item:hover {
+    background-color: #000000;
+    cursor: pointer;
+}
+
+.highlight {
+    background-color: purple;
+    padding: 2px;
+}
+
+.rate-em {
+    margin-top: 20px;
+}
+
+.sort-button[data-direction="desc"]::after {
+    content: "↓";
+}
+
+.sort-button[data-direction="asc"]::after {
+    content: "↑";
+}
+
+.dept-filter {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    background-color: var(--primary-bg);
+    color: var(--primary-text);
+    min-width: 150px;
+}
+
+.dept-filter:hover {
+    background-color: var(--primary-hover);
+}
+
+.media-container {
+    margin-top: 20px;
+}
+
+.media-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.media-item {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.report-media {
+    max-width: 100%;
+    height: auto;
+}
+
+.report-image {
+    max-height: 200px;
+    object-fit: cover;
+}
+
+.report-audio, .report-video {
+    width: 100%;
+}
+
+/* Media queries for fine-tuning on different devices */
+@media screen and (max-width: 768px) {
+    :root {
+        --base-font-size: 1.1rem;  /* Slightly larger on mobile */
+    }
+    
+    h1 {
+        font-size: 1.8rem;  /* Smaller heading on mobile */
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    :root {
+        --base-font-size: 1.2rem;  /* Slightly larger on desktop */
+    }
+    
+    h1 {
+        font-size: 2.5rem;  /* Larger heading on desktop */
+    }
+} 

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ratemycop.ca</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+</head>
+
+<!--conn header-->
+<div class="conn-head" style="margin: 10px; padding: 10px; border: 1px solid #ccc;">
+    <div onclick="gohome()"><img src="static/LOGO2.png"></div>
+     <div id="connectionInfo" style="display:none">
+        <div><button onclick="show_qrcontainer()">add QR peers</button></div>
+        <div><pre id="info">-</pre></div>
+       <div style="font-size: 12px; color: white;"><span id="roomStatus">Not connected</span><br> download <span id="downloadSpeed">0 B/s</span> upload <span id="uploadSpeed">0 B/s</span></div>
+        <div id="progress"></div>
+    </div>
+    <div id="chat" style="display:none">
+    <div id="display-files" style="color: whitesmoke;"></div>
+        <div id="messages" style="height: 300px; overflow-y: auto; border: 1px solid #ccc; margin-bottom: 10px; padding: 10px;"></div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <input type="text" id="messageInput" style="flex: 1;">
+                        <input type="file" id="fileInput" style="display: none;">
+            <button onclick="document.getElementById('fileInput').click()" style="
+                padding: 5px 10px;
+                background: #2196f3;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 1.2em;
+            ">📎</button>
+            <button onclick="sendMessage()" style="
+                padding: 5px 10px;
+                background: #2196f3;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            ">Send</button>
+        </div>
+    </div>
+<button onclick="toggle_chat()" id="toggle" class="sort-button" data-sort="first" data-direction="de_esc" style="display: none;"></button>
+</div>
+<!-- end conn -->
+
+<!-- HOME -->
+<div id="homecontainer">
+<h5 style="color: #eeee;">welcome to ratemycop.ca! an anonymous archive and counter-surveillance platform made for abolition <br>
+    developed in part through dissertation research with the social and political thought program @ york university <br>
+    the site is made of three apps all of which can run locally and offline:<br>
+</h5>
+<div>
+    <button id="archiveBtn" style="height: 200%;">LOAD ARCHIVE</button><h5>a confidential ARCHIVE of user submited ratings of canadian police officers</h5>
+</div> <!-- create a function that displays search container the way a view would be displayed-->
+<div>
+    <button onclick="join_settings()">JOIN ROOM</button><h5 style="color: #eeee;">private and ephemeral p2p CHAT rooms that use a given torrent as rendezvous to send arbitrary data over bitorrent wires, and can also be used to host a mirror of the ratemycop.ca archive</h5>
+</div>
+<div>
+    <button onclick="host_settings()">HOST YOUR OWN</button><h5 style="color: #eeee;">host your own private and ephemeral p2p CHAT room</h5>
+</div> <!-- event listener is probably better???-->
+<div>
+<button onclick="location.href = '/cop-co';">DETECT</button> <h5 style="color: #eeee;">a computer vision model that DETECTs cops, badges, faces etc. in a given image</h5> 
+</div>
+</div>
+<!-- END OF HOME-->
+
+<!-- torrent settings/magnet and trackers -->
+ <div id="join_settings" style="display: none;"> <!-- join room -->
+    🧲 <input type="text" id="magnetLink" placeholder="Enter magnet link"><br>
+    🔒 <input type="text" id="password" placeholder="Enter password" title="Same passphrase as host encrypts chat (AES). Leave empty for plaintext.">
+    <button onclick="join_room()">JOIN ROOM</button>
+</div>
+<div id="host_settings" style="display: none;">
+    This app uses webtorrent to create ephemeral p2p chat rooms that enable users to use a torrent as a rendezvous point at which to share files and messages. It can also be used to mirror or host your own version of the ratemycop archive in the browser. If JSON files containing an array of Cops with ratings-- {id:, first:, last:, rank:, badge:, sal:, "ratings":[{"id":,"time":,"loc":,"txt":, "esc":,"de_esc":,"tags":}]}-- are shared, the app can load these into a temporary archive displayed below the chat. While you are connected to a room, the rating form will have a second upload button labeled "share to room" which will send the rating to all currently connected peers, rather than to the main archive server. In this way users can host a mirror of the site and accept submissions as if they were a server, without needing to install one.  
+    <h5>attach files: <input id="hostfiles" type="file" multiple></h5>
+<div class="tracker-config"> <h5> 🌐 trackers: <br>
+    <textarea id="trackerList" style="width: 450px; height: 80px" placeholder="Enter tracker URLs, one per line">wss://tracker.openwebtorrent.com</textarea><!--wss://192.168.2.16:6969  -->
+   <div> add <span onclick="location.href = 'https://github.com/webtorrent/webtorrent';">webtorrent</span> trackers for peer discovery. each URL should be on a separate line. Ensure you understand the risks of torrenting before proceeding. A VPN or self-hosted tracker is recommended.</div>
+</h5>
+</div>
+    <div>🔒 <input type="text" id="hostpassword" placeholder="Choose password" title="Share this passphrase with guests for encrypted chat (AES). Leave empty for plaintext."> </div>
+    <br><button onclick="host_room()">CREATE ROOM</button>
+</div>
+
+<!-- START OF SEARCH STUFF -->
+<div class="search-container" id="archiveView" style="display: none;">
+<div class="search-controls"> <!-- searchbar-->
+    <input type="text" id="searchInput" placeholder="Search..." class="search-input">
+    <button id="searchButton" class="search-button" style="display: none;">Search</button>
+</div>
+<div> <!-- dept filter -->
+    <select id="deptFilter" class="dept-filter">
+        <option value="">All</option>
+    </select>
+</div>
+<div class="sf"> <!--navbuttons-->
+    <button id="copbutt" class="type-btn" datatype="cop">cops</button>
+    <button id="ratebutt" class="type-btn" datatype="rate">ratings</button>
+    <button id="talkbutt" onclick="location.href='https://ratemycop.ca/static/map'">map</button>
+</div>
+<div class="sort-controls"> <!-- sort buttons -->
+    <button id="sortFirst" class="sort-button" data-sort="first" data-direction="asc" style="display: none;">First Name</button>
+    <button id="sortLast" class="sort-button" data-sort="last" data-direction="asc" style="display: none;">Last Name </button>
+    <button id="sortTime" class="sort-button" data-sort="time" data-direction="de_esc" style="display: none;">Time </button>
+    <button id="sortSal" class="sort-button" data-sort="sal" data-direction="de_esc" style="display: none;">Salary </button>
+    <button id="sortRatings" class="sort-button" data-sort="ratings" data-direction="de_esc" style="display: none;"># of Ratings </button>
+</div>
+<div id="viewContainer"> <!--views--> <!-- add map view?? use same logic for home buttons?-->
+    <div id="results" class="search-results"></div> 
+    <div id="copView" class="detail-view" style="display: none;">
+        <button class="back-button" onclick="showSearchResults()">← Back to Search</button>
+        <div class="cop-content"></div>
+    </div>
+    <div id="rateView" class="detail-view" style="display: none;">
+        <button class="back-button" onclick="showSearchResults()">← Back to Search</button>
+        <div class="rate-content"></div>
+    </div> 
+    <div id="rateFormView" class="detail-view" style="display: none;"> <!-- add back to search button-->
+        <button class="back-button" onclick="view_cop(currentCopId)">← Back to Cop</button>
+        <button class="back-button" onclick="showSearchResults()">← Back to Search</button>
+
+        <div class="rate-form-content"></div>
+    </div>
+</div>
+</div>
+<!-- END OF SEARCH STUFF -->
+<!-- QR STUFF-->
+<div class="QRcontainer" id="QRcontainer" style="display: none;">
+    <h1>Add QR Peers</h1>
+    <p>Generate and Exchange WebRTC Offer/Answers to directly add peers to the room. The new peer must be sent the WebRTC Offer so they can generate an Answer. When the recieved answer is entered by the user who initated the exchange, the app will attempt to create a WebRTC connection [note: some network security settings are incompatile with direct WebRTC and a means of NAT traversal may be required ] </p>
+    <button onclick="generateWebRTCOffer()">Generate WebRTC Offer</button>
+    <button onclick="startPasteInterface()">Process WebRTC Offer</button>
+    <button onclick="startPasteInterface()">Process WebRTC Answer</button>
+    <div id="status"></div>
+    <div id="pasteInterface" style="display: none;">
+        <textarea id="pasteTextarea" placeholder="Paste the encrypted offer or answer data here..."></textarea>
+        <br>
+        <button class="paste-button" onclick="processPastedData()">Process Data</button>
+        <button class="paste-button" onclick="closePasteInterface()">Cancel</button>
+    </div>
+    <div id="qrDisplay"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="static/rmc-rooms.js"></script>
+<script src="static/rmc-archive.js"></script>
+ <script>
+    const DOM = {
+        searchInput: document.getElementById('searchInput'),
+        searchButton: document.getElementById('searchButton'),
+        resultsContainer: document.getElementById('results'),
+        deptFilter: document.getElementById('deptFilter'),
+        copView: document.getElementById('copView'),
+        rateView: document.getElementById('rateView'),
+        rateFormView: document.getElementById('rateFormView'),
+        searchControls: document.querySelector('.search-controls'),
+        sf: document.querySelector('.sf'),
+        sortControls: document.querySelector('.sort-controls'),
+        sortButtons: document.querySelectorAll('.sort-button'),
+        ratebutt: document.getElementById('ratebutt'),
+        copbutt: document.getElementById('copbutt'),
+        talkbutt: document.getElementById('talkbutt'),
+        archiveBtn: document.getElementById('archiveBtn'),
+        archiveView: document.getElementById('archiveView'),
+        homecontainer: document.getElementById('homecontainer'),
+        joinsettings: document.getElementById('join_settings'),
+        hostsettings: document.getElementById('host_settings'),
+        connectionInfo: document.getElementById('connectionInfo'),
+        chat: document.getElementById('chat'),
+        toggle: document.getElementById('toggle'),
+        QRcontainer: document.getElementById('QRcontainer')
+    };
+
+
+///event listeners 
+function setupEventListeners() {
+        const triggerSearch = () => {
+            const searchTerm = DOM.searchInput.value.toLowerCase();
+            performSearch(searchTerm);
+        };
+        
+        // Search functionality
+        DOM.searchButton.addEventListener('click', triggerSearch);
+        DOM.searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') triggerSearch();
+        });
+        
+        //home butts
+        DOM.archiveBtn.addEventListener('click', showArchive);
+
+        // Navigation buttons
+        DOM.ratebutt.addEventListener('click', () => setView('rates'));
+        DOM.copbutt.addEventListener('click', () => setView('cops'));
+        
+        // Department filter
+        DOM.deptFilter.addEventListener('change', triggerSearch);
+        
+        // Sort buttons
+        DOM.sortButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const isActive = button.classList.contains('active');
+                DOM.sortButtons.forEach(btn => btn.classList.remove('active'));
+                
+                if (isActive) {
+                    button.dataset.direction = button.dataset.direction === 'asc' ? 'de_esc' : 'asc';
+                }
+                button.classList.add('active');
+                triggerSearch();
+            });
+        });
+
+        // Add event listener for expando buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('expando-btn')) {
+                const targetId = e.target.getAttribute('data-target');
+                const gallery = document.getElementById(targetId);
+                
+                if (gallery.style.display === 'none') {
+                    gallery.style.display = 'block';
+                    e.target.textContent = 'Hide ' + e.target.textContent;
+                } else {
+                    gallery.style.display = 'none';
+                    e.target.textContent = e.target.textContent.replace('Hide ', '');
+                }
+            }
+        });
+    }
+
+function getUniqueDepartments() {
+    const departments = new Set();
+            copsData.forEach(cop => {
+            if (cop.dept) departments.add(cop.dept);
+        });
+        ratesData.forEach(rate => {
+            if (rate.cops) {
+                const deptMatch = rate.cops.match(/- ([^-]+)(?:\s|$)/);
+                if (deptMatch) departments.add(deptMatch[1]);
+            }
+        });
+        return Array.from(departments).sort();
+    }
+
+
+function fillResultItem(div, result) {
+        const searchTerm = DOM.searchInput.value.toLowerCase();
+        if (result.type === 'cop') {
+            const cop = result.data;
+            const h2 = document.createElement('h2');
+            h2.className = 'cop';
+            const pCophead = document.createElement('p');
+            pCophead.className = 'cophead';
+            appendHighlighted(pCophead, cop.first + ' ' + cop.last, searchTerm);
+            h2.appendChild(pCophead);
+            const pDept = document.createElement('p');
+            pDept.className = 'h2head';
+            appendHighlighted(pDept, cop.dept || '', searchTerm);
+            h2.appendChild(pDept);
+            const pRank = document.createElement('p');
+            pRank.className = 'h2head';
+            appendHighlighted(pRank, cop.rank || '', searchTerm);
+            h2.appendChild(pRank);
+            if (cop.sal) {
+                const pSal = document.createElement('p');
+                pSal.className = 'h2head';
+                appendHighlighted(pSal, '$' + String(cop.sal), searchTerm);
+                h2.appendChild(pSal);
+            }
+            if (cop.badge != null && String(cop.badge) !== '') {
+                const pBadge = document.createElement('p');
+                pBadge.className = 'h2head';
+                pBadge.appendChild(document.createTextNode('🛡# '));
+                const badgeWrap = document.createElement('span');
+                appendHighlighted(badgeWrap, String(cop.badge), searchTerm);
+                pBadge.appendChild(badgeWrap);
+                h2.appendChild(pBadge);
+            }
+            div.appendChild(h2);
+        } else {
+            const rate = result.data;
+            let mediaIndicators = '';
+            if (rate.files) {
+                const fileList = rate.files.split(',').map(f => f.trim());
+                const categorizedFiles = categorizeFiles(fileList);
+                if (categorizedFiles.images.length > 0) mediaIndicators += '📷 ';
+                if (categorizedFiles.audio.length > 0) mediaIndicators += '🔊 ';
+                if (categorizedFiles.video.length > 0) mediaIndicators += '🎥 ';
+            }
+            const pCops = document.createElement('p');
+            pCops.className = 'h2head';
+            pCops.textContent = '🛡 ' + (rate.cops || '');
+            div.appendChild(pCops);
+            const pWhen = document.createElement('p');
+            pWhen.className = 'h2head';
+            pWhen.textContent = '🕓 ' + new Date(rate.time).toLocaleString();
+            div.appendChild(pWhen);
+            const pLoc = document.createElement('p');
+            pLoc.className = 'h2head';
+            appendHighlighted(pLoc, rate.loc || 'Unknown', searchTerm);
+            div.appendChild(pLoc);
+            if (rate.esc) {
+                const escBar = document.createElement('div');
+                escBar.style.cssText = 'width: 15%; height: 1px; background: red; margin: 5px 0;';
+                div.appendChild(escBar);
+            }
+            if (rate.de_esc) {
+                const deBar = document.createElement('div');
+                deBar.style.cssText = 'width: 15%; height: 1px; background: blue; margin: 5px 0;';
+                div.appendChild(deBar);
+            }
+            if (mediaIndicators) {
+                const pMed = document.createElement('p');
+                pMed.className = 'h2head';
+                pMed.textContent = mediaIndicators;
+                div.appendChild(pMed);
+            }
+            const pTxt = document.createElement('p');
+            pTxt.className = 'h2bod';
+            appendHighlighted(pTxt, rate.txt || '', searchTerm);
+            div.appendChild(pTxt);
+        }
+    }
+
+
+async function initializePage() {
+    setupEventListeners();
+    if (typeof setupRoomInputListeners === 'function') {
+        setupRoomInputListeners();
+    }
+}
+
+// Start initialization
+initializePage();
+
+
+
+
+
+ </script>
+</html>
