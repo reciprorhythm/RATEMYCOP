@@ -345,12 +345,8 @@ app.use('*', async (c, next) => {
   const url = new URL(c.req.url)
   try {
     if (url.pathname === '/') {
-      const home = new Request(new URL('/static/off.html', c.req.url)) //'/static/homewsearch.html'
+      const home = new Request(new URL('/static/home.html', c.req.url)) 
       return await c.env.ASSETS.fetch(home)
-    }
-    if (url.pathname === '/demo') { 
-      const map = new Request(new URL('/static/home.html', c.req.url))
-      return await c.env.ASSETS.fetch(map)
     }
     if (url.pathname === '/map') {
       const map = new Request(new URL('/static/map.html', c.req.url))
