@@ -353,7 +353,7 @@ app.use('*', async (c, next) => {
       return await c.env.ASSETS.fetch(map)
     }  
     if (url.pathname === '/cop-co') {
-      const map = new Request(new URL('/static/cop-co-ssd.html', c.req.url))
+      const map = new Request(new URL('/static/cop-co.html', c.req.url))
       return await c.env.ASSETS.fetch(map)
     }  
       return await c.env.ASSETS.fetch(c.req)
