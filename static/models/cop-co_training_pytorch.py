@@ -1,3 +1,4 @@
+# script first converts pascal to yaml. if using yaml directly omit everything before main() #
 from __future__ import annotations
 
 import argparse
@@ -265,14 +266,12 @@ def main() -> None:
     print(metrics)
 
     print("\n=== Export TFLite (model.export -> cop-api.tflite) ===")
-    # int8 needs calibration images; pass the dataset yaml like Model Maker did
     export_path = model.export(
         format="litert",
         imgsz=args.imgsz,
         int8=True,
         data=str(data_yaml),
     ) 
-    # int8 is depreciated use quantize instead
     export_path = Path(export_path)
     dest = Path(args.tflite_name)
     if not dest.is_absolute():
