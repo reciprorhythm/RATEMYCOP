@@ -1,26 +1,3 @@
-#!/usr/bin/env python3
-"""
-Drop-in replacement for the TFLite Model Maker EfficientDet-Lite2 script.
-
-Model Maker is unmaintained and hard to install on modern TF. This script does
-the same end-to-end job with PyTorch + Ultralytics YOLO:
-
-  1. Load Pascal VOC from training/train and training/validate
-  2. Train for 100 epochs (batch_size=4, full model fine-tune)
-  3. Evaluate on validation
-  4. Export cop-api.tflite
-  5. Evaluate the TFLite model
-
-Install:
-  pip install ultralytics opencv-python-headless pillow
-
-EfficientDet-Lite2 used 448x448 inputs; YOLO imgsz=448 keeps that scale.
-YOLOv8s is a reasonable mobile-sized stand-in for EfficientDet-Lite2.
-
-Run from the repo root (where the training/ folder lives):
-  python apitrain_pytorch.py
-"""
-
 from __future__ import annotations
 
 import argparse
