@@ -2,9 +2,7 @@ import csv
 import sys
 
 def filter_csv(input_file, output_file, search_word, case_sensitive=False):
-    """
-    Filter a CSV file for records containing a specific word and save to a new CSV.
-    
+    """  
     Args:
         input_file (str): Path to the input CSV file
         output_file (str): Path to save the filtered CSV file
@@ -51,18 +49,14 @@ def filter_csv(input_file, output_file, search_word, case_sensitive=False):
         print(f"An error occurred: {str(e)}")
 
 if __name__ == "__main__":
-    # Check if correct number of arguments provided
     if len(sys.argv) < 4:
         print("Usage: python filter_csv.py input_file.csv output_file.csv search_word [case_sensitive]")
         print("Example: python filter_csv.py data.csv filtered.csv police")
         print("For case-sensitive search: python filter_csv.py data.csv filtered.csv Police true")
         sys.exit(1)
-    
-    # Get arguments
     input_file = sys.argv[1]
     output_file = sys.argv[2]
     search_word = sys.argv[3]
     case_sensitive = len(sys.argv) > 4 and sys.argv[4].lower() == 'true'
-    
-    # Run the filter
+
     filter_csv(input_file, output_file, search_word, case_sensitive) 
